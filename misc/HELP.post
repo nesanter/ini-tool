@@ -1,0 +1,31 @@
+Warning types for --warnings:
+  all, duplicate, empty, remove, sections");
+  (default: all false)
+
+  Example: --warnings=duplicate=true
+           --warnings=all=true,sections=false
+
+  Warnings are written to stderr.
+
+The --warn option is equivalent to --warnings=all=true
+and additionally takes precedent over --warnings=all=false.
+Passing --warn=false is only relevant to override an earlier --warn[=true].
+
+
+By default no output is generated without the --output option
+is used to specify a filename. In this case, the parsed
+input will be written to a file with the given name (use - for stdout.)
+
+Each input file will be parsed in it's entirety before writing.
+This means the output will differ in a few cases:
+  1) where keys in a single section are distributed over
+     multiple identically-named section blocks, they will
+     be coalesced into a single block.
+  2) where duplicate keys overwrite the value of a previous key,
+     only the final value will be emitted.
+  3) where removal keys are present, there action will be performed
+     but they will not be emitted. (Note that if INI files are being
+     used together with "default" configurations, this means that
+     removal keys should be interpreted as limited in scope to the INI
+     file and as having no effect on the default.
+

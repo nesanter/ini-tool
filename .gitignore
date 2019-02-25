@@ -1,0 +1,4 @@
+/.dub
+/ini-tool
+*.a
+*.o

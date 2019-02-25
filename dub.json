@@ -1,0 +1,21 @@
+{
+    "name": "ini-tool",
+
+    "authors": [
+        "Noah Santer <n.ed.santer@gmail.com>"
+    ],
+
+    "copyright": "Copyright © 2019 Noah Santer",
+    "license": "GPL-3.0",
+
+    "description": "INI handling tools",
+    "homepage": "github.com/nesanter/ini-tool.git",
+
+    "stringImportsPaths": [
+        "text"
+    ],
+
+    "preBuildCommands": [
+        "echo dev > misc/VERSION"
+    ]
+}
