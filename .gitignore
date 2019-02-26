@@ -3,4 +3,4 @@
 *.a
 *.o
 /misc/*.gen
-
+*.ignore
