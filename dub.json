@@ -16,7 +16,7 @@
     ],
 
     "preBuildCommands": [
-        "git describe > misc/VERSION.gen",
-        "echo \"$$DUB_CONFIG/$$DUB_BUILD_TYPE $$DC_BASE $$D_FRONTEND_VER $$DUB_ARCH $$DUB_PLATFORM (on $(date +%c))\" > misc/BUILDINFO.gen"
+        "git --git-dir=\"$PACKAGE_DIR/.git\" describe > \"$$STRING_IMPORT_PATHS/VERSION.gen\"",
+        "echo \"$$DUB_CONFIG/$$DUB_BUILD_TYPE $$DC_BASE $$D_FRONTEND_VER $$DUB_ARCH $$DUB_PLATFORM (on $(date +%c))\" > \"$$STRING_IMPORT_PATHS/BUILDINFO.gen\""
     ]
 }
