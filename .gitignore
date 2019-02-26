@@ -2,3 +2,5 @@
 /ini-tool
 *.a
 *.o
+/misc/*.gen
+

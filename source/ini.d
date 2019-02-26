@@ -17,7 +17,8 @@
  */
 module ini;
 
-enum VERSION = import("VERSION");
+import std.string : strip;
+enum VERSION = import("VERSION.gen").strip;
 
 import std.stdio : File;
 

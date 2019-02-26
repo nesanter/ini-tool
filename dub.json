@@ -11,11 +11,12 @@
     "description": "INI handling tools",
     "homepage": "github.com/nesanter/ini-tool.git",
 
-    "stringImportsPaths": [
-        "text"
+    "stringImportPaths": [
+        "misc/"
     ],
 
     "preBuildCommands": [
-        "echo dev > misc/VERSION"
+        "git describe > misc/VERSION.gen",
+        "echo \"$$DUB_CONFIG/$$DUB_BUILD_TYPE $$DC_BASE $$D_FRONTEND_VER $$DUB_ARCH $$DUB_PLATFORM (on $(date +%c))\" > misc/BUILDINFO.gen"
     ]
 }

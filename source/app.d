@@ -22,9 +22,65 @@
 
 import std.stdio;
 import std.getopt;
-import std.conv : ConvException;
+import std.conv : ConvException, to;
 
 import ini;
+
+void optprinter(Option[] options, File file) {
+    import std.process : environment;
+    import std.format : format;
+
+    enum fallback = 80;
+
+    size_t twidth = to!size_t(environment.get("COLUMNS", to!string(fallback)));
+
+    size_t maxName;
+
+    enum indent = "  ";
+
+    // max name
+    foreach (opt; options) {
+        if (opt.optLong.length > maxName) {
+            maxName = opt.optLong.length;
+        }
+    }
+
+    size_t padTo = maxName + indent.length;
+
+    if (padTo > twidth) {
+        // fallback
+        twidth = fallback;
+    }
+
+    foreach (opt; options[0 .. $-1]) { // drop the last option as it is redundant help
+        string s = indent ~ opt.optLong;
+        foreach (i; s.length .. padTo) {
+            s ~= " ";
+        }
+        file.write(s);
+        if (padTo + indent.length + opt.help.length < twidth) {
+            file.writeln(indent, opt.help);
+        } else {
+            string help = opt.help.dup;
+            size_t l = twidth - padTo - indent.length;
+            string pad;
+            foreach (i; 0 .. padTo + indent.length) {
+                pad ~= " ";
+            }
+
+            file.writeln();
+            while (help.length >= l) {
+                file.writeln(pad, help[0 .. l]);
+                help = help[l .. $];
+            }
+
+            if (help.length > 0) {
+                file.writeln(pad, help);
+            }
+        }
+    }
+}
+
 
 int main(string[] args)
 {
@@ -34,23 +90,54 @@ int main(string[] args)
     bool[Warning] warnings;
     bool warn;
 
+    bool help;
+    bool longHelp;
+    bool license;
+    bool justVersion;
+
     arraySep = ",";
 
     try {
         auto helpInfo = getopt(args,
                 "output|o", "Write output to file (use - for stdout)", &outName,
                 "warn|w", "Set warnings to enabled by defeault", &warn,
-                "warnings", "Set enable status for specific warnings", &warnings,
+                "warnings", "Set enable status for specific warnings\n", &warnings,
+
+                "h|h", "Show shorter help", &help,
+                "help", "Show longer help", &longHelp,
+                "license", "Show full license information", &license,
+                "version", "Print the bare version", &justVersion,
             );
 
-        if (helpInfo.helpWanted) {
-            defaultGetoptPrinter(import("HELP.pre"), helpInfo.options);
-            writeln();
-            writeln(import("HELP.post"));
-            writeln(import("COPYING.post"));
-            writeln("Version ", VERSION);
+        if (license) {
+            writeln(import("LICENSE"));
             return 1;
         }
+
+        if (justVersion) {
+            writeln(VERSION);
+            return 1;
+        }
+
+        if (help || longHelp) {
+            writeln(import("HELP.pre"));
+            optprinter(helpInfo.options, stdout);
+            //defaultGetoptPrinter(import("HELP.pre"), helpInfo.options);
+            writeln();
+
+            if (longHelp) {
+                writeln("VERSION\n\n", VERSION, " [", import("BUILDINFO.gen"), "]");
+                writeln(import("HELP.post"));
+                writeln(import("COPYING.post"));
+            } else {
+                writeln("version ", VERSION);
+            }
+
+            writeln(import("COPYING.short"));
+            
+            return 1;
+        }
+
     } catch (ConvException e) {
         stderr.writeln("invalid argument passed to option(s)");
         return 1;
