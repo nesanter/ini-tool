@@ -11,7 +11,6 @@ The --warn option is equivalent to --warnings=all=true
 and additionally takes precedent over --warnings=all=false.
 Passing --warn=false is only relevant to override an earlier --warn[=true].
 
-
 By default no output is generated without the --output option
 is used to specify a filename. In this case, the parsed
 input will be written to a file with the given name (use - for stdout.)
