@@ -43,8 +43,8 @@ enum Warning {
 }
 
 class INI {
-    string[string][string] sections;
-    private string[string] currentSection;
+    string[][string][string] sections;
+    private string[][string] currentSection;
 
     alias sections this;
 
@@ -81,7 +81,7 @@ class INI {
     private void setSection(string name)
     {
         if (name !in sections) {
-            sections[name] = [null:name];
+            sections[name] = [null:[name]];
         }
         
         currentSection = sections[name];
@@ -152,6 +152,7 @@ class INI {
             }
         }
 
+        /*
         if (warnings.get(Warning.duplicate, warnAll)) {
             if (key in currentSection) {
                 warn("key name is duplicate");
@@ -160,6 +161,7 @@ class INI {
                 }
             }
         }
+        */
 
         if (warnings.get(Warning.empty, warnAll)) {
             if (val.length == 0) {
@@ -170,7 +172,7 @@ class INI {
             }
         }
 
-        currentSection[key] = val;
+        currentSection[key] ~= val;
     }
 
     void write(File file)
@@ -180,11 +182,16 @@ class INI {
                 file.writeln("\n[", name, "]");
             }
 
-            foreach (k, v; sec) {
-                if (k == "" && v == name) {
+            foreach (k, a; sec) {
+                if (a.length == 0) {
                     continue;
                 }
-                file.writeln(k, " = ", v);
+                if (a.length == 1 && k == "" && a[0] == name) {
+                    continue;
+                }
+                foreach (v; a) {
+                    file.writeln(k, " = ", v);
+                }
             }
         }
     }
