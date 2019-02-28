@@ -7,7 +7,7 @@
 " can be used to enable this syntax per-file:
 " vim: set syn=sssini:
 
-syn match sssiniRemoveKey "^\s*\zs[^= \t]\+\ze\s*$"
+syn match sssiniRemoveKey "^\s*\zs[^=]\{-1,}\ze\s*$"
 
 syn match sssiniAssign "^.\{-}=.*$" contains=sssiniKey,sssiniValue
 syn match sssiniKey "^\s*\zs.\{-}\ze\s*=" contained
