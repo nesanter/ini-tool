@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo -n "$(git --git-dir="$1" describe)"
+git --git-dir="$1" diff --quiet || echo -n '*'
+
+
+
